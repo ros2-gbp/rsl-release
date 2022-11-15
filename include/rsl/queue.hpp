@@ -8,12 +8,18 @@
 
 namespace rsl {
 
+/** @file */
+
 /**
  * @brief Thread-safe queue. Particularly useful when multiple threads need to write to and/or read
  * from a queue.
  */
 template <typename T>
 class Queue {
+    std::queue<T> queue_;
+    std::condition_variable cv_;
+    mutable std::mutex mutex_;
+
    public:
     /**
      * @brief Get the size of the queue
@@ -35,7 +41,7 @@ class Queue {
 
     /**
      * @brief Push data into the queue
-     * @param[in] value Data to push into the queue
+     * @param value Data to push into the queue
      */
     void push(T value) noexcept {
         auto const lock = std::lock_guard(mutex_);
@@ -56,7 +62,7 @@ class Queue {
 
     /**
      * @brief Wait for given duration then pop from the queue and return the element
-     * @param[in] wait_time Maximum time to wait for queue to be non-empty
+     * @param wait_time Maximum time to wait for queue to be non-empty
      * @return Data popped from the queue or error
      */
     [[nodiscard]] auto pop(std::chrono::nanoseconds wait_time = {}) -> std::optional<T> {
@@ -69,10 +75,5 @@ class Queue {
         queue_.pop();
         return value;
     }
-
-   private:
-    std::queue<T> queue_;
-    std::condition_variable cv_;
-    mutable std::mutex mutex_;
 };
 }  // namespace rsl

@@ -7,6 +7,8 @@
 
 namespace rsl {
 
+/** @file */
+
 /**
  * @brief Get a random number generator
  *
@@ -16,7 +18,7 @@ namespace rsl {
  * sequence is provided this function throws. The returned value is a reference to a thread_local
  * static generator.
  *
- * @param[in] seed_sequence Seed sequence for random number generator
+ * @param seed_sequence Seed sequence for random number generator
  *
  * @return Seeded random number generator
  */
@@ -25,15 +27,15 @@ auto rng(std::seed_seq seed_sequence = {}) -> std::mt19937&;
 /**
  * @brief Get a uniform real number in a given range
  *
- * @param[in] lower Lower bound, inclusive
- * @param[in] upper Upper bound, exclusive
+ * @param lower Lower bound, inclusive
+ * @param upper Upper bound, exclusive
  *
  * @tparam RealType Floating point type
  *
  * @return Uniform real in range [lower, upper)
  */
 template <typename RealType>
-auto uniform_real(RealType lower, RealType upper) {
+[[nodiscard]] auto uniform_real(RealType lower, RealType upper) {
     static_assert(std::is_floating_point_v<RealType>);
     assert(lower < upper);
     return std::uniform_real_distribution(lower, upper)(rng());
@@ -42,15 +44,15 @@ auto uniform_real(RealType lower, RealType upper) {
 /**
  * @brief Get a uniform integer number in a given range
  *
- * @param[in] lower Lower bound, inclusive
- * @param[in] upper Upper bound, inclusive
+ * @param lower Lower bound, inclusive
+ * @param upper Upper bound, inclusive
  *
  * @tparam IntType Integral type
  *
  * @return Uniform integer in range [lower, upper]
  */
 template <typename IntType>
-auto uniform_int(IntType lower, IntType upper) {
+[[nodiscard]] auto uniform_int(IntType lower, IntType upper) {
     static_assert(std::is_integral_v<IntType>);
     assert(lower <= upper);
     return std::uniform_int_distribution(lower, upper)(rng());
@@ -60,6 +62,6 @@ auto uniform_int(IntType lower, IntType upper) {
  * @brief Generate a random unit quaternion of doubles
  * @return Random unit quaternion
  */
-auto random_unit_quaternion() -> Eigen::Quaterniond;
+[[nodiscard]] auto random_unit_quaternion() -> Eigen::Quaterniond;
 
 }  // namespace rsl
