@@ -1,0 +1,12 @@
+Source: ros-iron-rsl
+Section: misc
+Priority: optional
+Maintainer: Tyler Weaver <maybe@tylerjw.dev>
+Build-Depends: debhelper (>= 9.0.0), clang-tidy <!nocheck>, doxygen, git, libeigen3-dev, libfmt-dev, librange-v3-dev <!nocheck>, ros-iron-ament-cmake-ros, ros-iron-rclcpp, ros-iron-tcb-span, ros-iron-tl-expected, ros-iron-ros-workspace
+Homepage: 
+Standards-Version: 3.9.2
+
+Package: ros-iron-rsl
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}, libeigen3-dev, libfmt-dev, ros-iron-rclcpp, ros-iron-tcb-span, ros-iron-tl-expected, ros-iron-ros-workspace
+Description: ROS Support Library
