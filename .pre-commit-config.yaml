@@ -1,7 +1,7 @@
 repos:
   # Standard hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v3.4.0
+    rev: v4.4.0
     hooks:
       - id: check-added-large-files
       - id: check-ast
@@ -25,7 +25,6 @@ repos:
       - id: forbid-new-submodules
       - id: mixed-line-ending
       - id: name-tests-test
-      - id: no-commit-to-branch
       - id: requirements-txt-fixer
       - id: sort-simple-yaml
       - id: trailing-whitespace
@@ -41,7 +40,7 @@ repos:
         args: ['-fallback-style=none', '-i']
 
   - repo: https://github.com/codespell-project/codespell
-    rev: v2.0.0
+    rev: v2.2.5
     hooks:
       - id: codespell
         args: ['--write-changes', '--ignore-words=.codespell_words']
