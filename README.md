@@ -1,3 +1,26 @@
+## rsl (rolling) - 1.1.0-2
+
+The packages in the `rsl` repository were released into the `rolling` distro by running `/usr/bin/bloom-release --track rolling --rosdistro rolling rsl` on `Wed, 06 Mar 2024 17:07:18 -0000`
+
+The `rsl` package was released.
+
+Version of package(s) in repository `rsl`:
+
+- upstream repository: https://github.com/PickNikRobotics/RSL.git
+- release repository: https://github.com/ros2-gbp/RSL-release.git
+- rosdistro version: `null`
+- old version: `1.1.0-1`
+- new version: `1.1.0-2`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `1.0.0`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## rsl (iron) - 1.1.0-1
 
 The packages in the `rsl` repository were released into the `iron` distro by running `/usr/bin/bloom-release --rosdistro iron rsl` on `Thu, 21 Dec 2023 00:59:51 -0000`
