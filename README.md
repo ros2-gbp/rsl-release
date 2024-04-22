@@ -1,3 +1,26 @@
+## rsl (jazzy) - 1.1.0-3
+
+The packages in the `rsl` repository were released into the `jazzy` distro by running `/usr/bin/bloom-release rsl --rosdistro jazzy` on `Mon, 22 Apr 2024 11:33:46 -0000`
+
+The `rsl` package was released.
+
+Version of package(s) in repository `rsl`:
+
+- upstream repository: https://github.com/PickNikRobotics/RSL.git
+- release repository: https://github.com/ros2-gbp/RSL-release.git
+- rosdistro version: `null`
+- old version: `1.1.0-2`
+- new version: `1.1.0-3`
+
+Versions of tools used:
+
+- bloom version: `0.11.2`
+- catkin_pkg version: `0.5.2`
+- rosdep version: `0.22.2`
+- rosdistro version: `0.9.0`
+- vcstools version: `0.1.42`
+
+
 ## rsl (jazzy) - 1.1.0-2
 
 The packages in the `rsl` repository were released into the `jazzy` distro by running `/usr/bin/bloom-release rsl --rosdistro jazzy` on `Mon, 22 Apr 2024 11:29:38 -0000`
