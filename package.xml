@@ -2,13 +2,11 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>rsl</name>
-  <version>1.1.0</version>
+  <version>1.2.0</version>
   <description>ROS Support Library</description>
   <author email="maybe@tylerjw.dev">Tyler Weaver</author>
-  <author email="sebastian.jahr@picknik.ai">Sebastian Jahr</author>
   <author email="chrisjthrasher@gmail.com">Chris Thrasher</author>
   <maintainer email="maybe@tylerjw.dev">Tyler Weaver</maintainer>
-  <maintainer email="sebastian.jahr@picknik.ai">Sebastian Jahr</maintainer>
   <maintainer email="chrisjthrasher@gmail.com">Chris Thrasher</maintainer>
   <license>BSD-3-Clause</license>
 
@@ -20,6 +18,7 @@
   <depend>tcb_span</depend>
   <depend>tl_expected</depend>
 
+  <test_depend>ament_cmake_ros</test_depend>
   <test_depend>clang-tidy</test_depend>
   <test_depend>git</test_depend>
   <test_depend>range-v3</test_depend>
