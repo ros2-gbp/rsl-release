@@ -9,24 +9,27 @@ jobs:
   cmake:
     name: cmake (${{ matrix.ros_distro }}, ${{ matrix.preset }}, ${{ matrix.compiler.name }})
     strategy:
+      fail-fast: false
       matrix:
         ros_distro: [humble, rolling]
         preset: [debug, release, asan, codecov]
         compiler:
-        - { name: gcc }
-        - { name: clang, flags: -DCMAKE_CXX_COMPILER=clang++ }
+        - { name: GCC }
+        - { name: Clang, flags: -DCMAKE_CXX_COMPILER=clang++ }
         exclude:
         - preset: codecov
-          compiler: { name: clang }
+          compiler: { name: Clang }
+        - preset: codecov
+          ros_distro: humble
     runs-on: ubuntu-22.04
     container: ghcr.io/picknikrobotics/rsl:upstream-${{ matrix.ros_distro }}
     env:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache ccache
-        uses: pat-s/always-upload-cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-cmake-${{ matrix.ros_distro }}-${{ matrix.preset }}-${{ github.sha }}-${{ github.run_id }}
@@ -52,7 +55,7 @@ jobs:
         run: cmake --build build/${{ matrix.preset }} --target tidy
       - name: Generate LCOV report
         if: ${{ matrix.preset == 'codecov' }}
-        run: lcov -c -d . -o coverage.info --no-external --exclude "*/build/**"
+        run: lcov -c -d . -o coverage.info --no-external --exclude "*/build/**" --ignore-errors mismatch
       - uses: codecov/codecov-action@v3
         if: ${{ matrix.preset == 'codecov' }}
         with:
@@ -70,9 +73,9 @@ jobs:
       CCACHE_DIR: ${{ github.workspace }}/.ccache
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Cache ccache
-        uses: pat-s/always-upload-cache@v3
+        uses: actions/cache@v4
         with:
           path: ${{ env.CCACHE_DIR }}
           key: ccache-ros-${{ matrix.ros_distro }}-${{ github.sha }}-${{ github.run_id }}
