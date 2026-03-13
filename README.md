@@ -1,3 +1,26 @@
+## rsl (kilted) - 1.3.0-1
+
+The packages in the `rsl` repository were released into the `kilted` distro by running `/usr/bin/bloom-release -r kilted rsl` on `Fri, 13 Mar 2026 07:45:47 -0000`
+
+The `rsl` package was released.
+
+Version of package(s) in repository `rsl`:
+
+- upstream repository: https://github.com/PickNikRobotics/RSL.git
+- release repository: https://github.com/ros2-gbp/RSL-release.git
+- rosdistro version: `1.2.0-1`
+- old version: `1.2.0-1`
+- new version: `1.3.0-1`
+
+Versions of tools used:
+
+- bloom version: `0.13.0`
+- catkin_pkg version: `1.1.0`
+- rosdep version: `0.26.0`
+- rosdistro version: `1.0.1`
+- vcstools version: `0.1.42`
+
+
 ## rsl (rolling) - 1.3.0-1
 
 The packages in the `rsl` repository were released into the `rolling` distro by running `/usr/bin/bloom-release -r rolling rsl` on `Fri, 13 Mar 2026 07:42:17 -0000`
