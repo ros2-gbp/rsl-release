@@ -7,9 +7,10 @@
 
 #include <rcl_interfaces/msg/set_parameters_result.hpp>
 #include <rclcpp/parameter.hpp>
-#include <tl_expected/expected.hpp>
+#include <tl/expected.hpp>
 
 #include <fmt/ranges.h>
+#include <type_traits>
 
 namespace rsl {
 
@@ -19,10 +20,24 @@ namespace rsl {
  * @cond DETAIL
  */
 namespace detail {
+template <typename T>
+[[nodiscard]] auto stringify(T const& value) -> std::string {
+    if constexpr (std::is_floating_point_v<T>) return fmt::format("{:g}", value);
+    return fmt::format("{}", value);
+}
+
+template <typename T>
+[[nodiscard]] auto join_stringified(std::vector<T> const& values) -> std::string {
+    std::vector<std::string> tokens;
+    tokens.reserve(values.size());
+    for (auto const& value : values) tokens.push_back(stringify(value));
+    return fmt::format("{}", fmt::join(tokens, ", "));
+}
+
 template <typename T, typename Fn>
 [[nodiscard]] auto size_compare(rclcpp::Parameter const& parameter, size_t const size,
-                                std::string const& predicate_description, Fn const& predicate)
-    -> tl::expected<void, std::string> {
+                                std::string const& predicate_description,
+                                Fn const& predicate) -> tl::expected<void, std::string> {
     static constexpr auto format_string = "Length of parameter '{}' is '{}' but must be {} '{}'";
     switch (parameter.get_type()) {
         case rclcpp::ParameterType::PARAMETER_STRING:
@@ -40,12 +55,12 @@ template <typename T, typename Fn>
 
 template <typename T, typename Fn>
 [[nodiscard]] auto compare(rclcpp::Parameter const& parameter, T const& value,
-                           std::string const& predicate_description, Fn const& predicate)
-    -> tl::expected<void, std::string> {
+                           std::string const& predicate_description,
+                           Fn const& predicate) -> tl::expected<void, std::string> {
     if (auto const param_value = parameter.get_value<T>(); !predicate(param_value, value))
         return tl::unexpected(fmt::format("Parameter '{}' with the value '{}' must be {} '{}'",
-                                          parameter.get_name(), param_value, predicate_description,
-                                          value));
+                                          parameter.get_name(), stringify(param_value),
+                                          predicate_description, stringify(value)));
     return {};
 }
 }  // namespace detail
@@ -154,8 +169,9 @@ template <typename T>
     for (auto val : param_value)
         if (val < lower || val > upper)
             return tl::unexpected(
-                fmt::format("Value '{}' in parameter '{}' must be within bounds '[{}, {}]'", val,
-                            parameter.get_name(), lower, upper));
+                fmt::format("Value '{}' in parameter '{}' must be within bounds '[{}, {}]'",
+                            detail::stringify(val), parameter.get_name(), detail::stringify(lower),
+                            detail::stringify(upper)));
     return {};
 }
 
@@ -166,14 +182,14 @@ template <typename T>
  * @return Help string if the parameter is invalid, otherwise void
  */
 template <typename T>
-[[nodiscard]] auto lower_element_bounds(rclcpp::Parameter const& parameter, T const& lower)
-    -> tl::expected<void, std::string> {
+[[nodiscard]] auto lower_element_bounds(rclcpp::Parameter const& parameter,
+                                        T const& lower) -> tl::expected<void, std::string> {
     auto const& param_value = parameter.get_value<std::vector<T>>();
     for (auto val : param_value)
         if (val < lower)
-            return tl::unexpected(
-                fmt::format("Value '{}' in parameter '{}' must be above lower bound of '{}'", val,
-                            parameter.get_name(), lower));
+            return tl::unexpected(fmt::format(
+                "Value '{}' in parameter '{}' must be above lower bound of '{}'",
+                detail::stringify(val), parameter.get_name(), detail::stringify(lower)));
     return {};
 }
 
@@ -184,14 +200,14 @@ template <typename T>
  * @return Help string if the parameter is invalid, otherwise void
  */
 template <typename T>
-[[nodiscard]] auto upper_element_bounds(rclcpp::Parameter const& parameter, T const& upper)
-    -> tl::expected<void, std::string> {
+[[nodiscard]] auto upper_element_bounds(rclcpp::Parameter const& parameter,
+                                        T const& upper) -> tl::expected<void, std::string> {
     auto const& param_value = parameter.get_value<std::vector<T>>();
     for (auto val : param_value)
         if (val > upper)
-            return tl::unexpected(
-                fmt::format("Value '{}' in parameter '{}' must be below upper bound of '{}'", val,
-                            parameter.get_name(), upper));
+            return tl::unexpected(fmt::format(
+                "Value '{}' in parameter '{}' must be below upper bound of '{}'",
+                detail::stringify(val), parameter.get_name(), detail::stringify(upper)));
     return {};
 }
 
@@ -202,13 +218,14 @@ template <typename T>
  * @return Help string if the parameter is invalid, otherwise void
  */
 template <typename T>
-[[nodiscard]] auto bounds(rclcpp::Parameter const& parameter, T const& lower, T const& upper)
-    -> tl::expected<void, std::string> {
+[[nodiscard]] auto bounds(rclcpp::Parameter const& parameter, T const& lower,
+                          T const& upper) -> tl::expected<void, std::string> {
     auto const& param_value = parameter.get_value<T>();
     if (param_value < lower || param_value > upper)
         return tl::unexpected(
             fmt::format("Parameter '{}' with the value '{}' must be within bounds '[{}, {}]'",
-                        parameter.get_name(), param_value, lower, upper));
+                        parameter.get_name(), detail::stringify(param_value),
+                        detail::stringify(lower), detail::stringify(upper)));
     return {};
 }
 
@@ -287,13 +304,13 @@ template <typename T>
  * @return Help string if the parameter is invalid, otherwise void
  */
 template <typename T>
-[[nodiscard]] auto one_of(rclcpp::Parameter const& parameter, std::vector<T> const& collection)
-    -> tl::expected<void, std::string> {
+[[nodiscard]] auto one_of(rclcpp::Parameter const& parameter,
+                          std::vector<T> const& collection) -> tl::expected<void, std::string> {
     auto const& param_value = parameter.get_value<T>();
     if (contains(collection, param_value)) return {};
     return tl::unexpected(fmt::format(
         "Parameter '{}' with the value '{}' is not in the set '{{{}}}'", parameter.get_name(),
-        param_value, fmt::format("{}", fmt::join(collection, ", "))));
+        detail::stringify(param_value), detail::join_stringified(collection)));
 }
 
 /**
